@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Spring-5Bean的自动装配 | gsfeng|博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="我们已经知道如何使用元素定义Bean以及使用和元素装配Bean,但是随着应用的不断增加，很遗憾，我们需要编写越来越复杂的XML配置。幸运的是，Spring提供了几种技巧，可以帮助我们减少XML的配置数量。  自动装配 （autowiring）有助于减少甚至消除元素和元素，让Spring自动识别如何装配Bean的依赖关系。 自动检测 （autodiscovery）比自动装配更进了一步，让Spring">
+<meta name="keywords" content="Spring,自动装配">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring-5Bean的自动装配">
+<meta property="og:url" content="http://yoursite.com/2017/08/19/20170819-Spring-5Bean的自动装配/index.html">
+<meta property="og:site_name" content="gsfeng|博客">
+<meta property="og:description" content="我们已经知道如何使用元素定义Bean以及使用和元素装配Bean,但是随着应用的不断增加，很遗憾，我们需要编写越来越复杂的XML配置。幸运的是，Spring提供了几种技巧，可以帮助我们减少XML的配置数量。  自动装配 （autowiring）有助于减少甚至消除元素和元素，让Spring自动识别如何装配Bean的依赖关系。 自动检测 （autodiscovery）比自动装配更进了一步，让Spring">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-08-02T03:54:49.302Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring-5Bean的自动装配">
+<meta name="twitter:description" content="我们已经知道如何使用元素定义Bean以及使用和元素装配Bean,但是随着应用的不断增加，很遗憾，我们需要编写越来越复杂的XML配置。幸运的是，Spring提供了几种技巧，可以帮助我们减少XML的配置数量。  自动装配 （autowiring）有助于减少甚至消除元素和元素，让Spring自动识别如何装配Bean的依赖关系。 自动检测 （autodiscovery）比自动装配更进了一步，让Spring">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/favicon.png" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">gsfeng|博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/timg.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/timg.jpg" />
+            <h2 id="name">PPOffice</h2>
+            <h3 id="title">Java后端 &amp; 微服务</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>BeiJing, China</span>
+            <a id="follow" target="_blank" href="http://github.com/gsfeng2015">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                14
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                20
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/gsfeng2015" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-20170819-Spring-5Bean的自动装配" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Spring-5Bean的自动装配
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2017/08/19/20170819-Spring-5Bean的自动装配/">
+            <time datetime="2017-08-19T12:53:52.000Z" itemprop="datePublished">2017-08-19</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Spring/">Spring</a>, <a class="tag-link" href="/tags/自动装配/">自动装配</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>我们已经知道如何使用<bean>元素定义Bean以及使用<constructor-arg>和<prroperty>元素装配Bean,但是随着应用的不断增加，很遗憾，我们需要编写越来越复杂的XML配置。<br>幸运的是，Spring提供了几种技巧，可以帮助我们减少XML的配置数量。</prroperty></constructor-arg></bean></p>
+<ul>
+<li><strong>自动装配</strong> （autowiring）有助于减少甚至消除<property>元素和<constructor-arg>元素，让Spring自动识别如何装配Bean的依赖关系。</constructor-arg></property></li>
+<li><strong>自动检测</strong> （autodiscovery）比自动装配更进了一步，让Spring能否自动识别哪些类需要被配置成Spring Bean，从而减少对<bean>元素的使用<br>当自动装配和自动检测在一起使用时，它们可以显著减少Spring的XML配置数量，通常只需要配置少量的几行XML代码，而无需知道在Spring的应用上下文中究竟有多少Bean。<a id="more"></a>
+<h1 id="自动装配Bean属性"><a href="#自动装配Bean属性" class="headerlink" title="自动装配Bean属性"></a>自动装配Bean属性</h1>自动装配分为4种：</bean></li>
+<li>byName——寻找和属性名（或者ID）相同的bean自动装配到Bean的对应属性汇总。若找不到，则不进行装配。</li>
+<li>byType——寻找和属性类型相同的bean,找不到,装不上,找到多个抛异常。</li>
+<li>constructor——把与Bean的构造器入参具有相同类型的其他Bean自动装配到Bean构造器的对应入参中。</li>
+<li>autodetect——首先尝试使用constructor进行自动装配。如果失败，再尝试进行byType进行自动装配<br>每一种装配都有自己的优缺点。</li>
+</ul>
+<h2 id="byName自动装配"><a href="#byName自动装配" class="headerlink" title="byName自动装配"></a>byName自动装配</h2><p>举个例子说明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;kenny2&quot; class=&quot;com.springaction.springidol.Instrumentalist&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;song&quot; value=&quot;Jingle Bells&quot; /&gt;</span><br><span class="line">    &lt;property name=&quot;instrument&quot; ref=&quot;saxophone&quot;/&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>配置文件中显式配置了Kenny的instrument属性。<br>我们现在修改id为saxophone的bean，修改后：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;instrument&quot; class=&quot;com.springaction.springidol.Saxophone&quot;/&gt;</span><br></pre></td></tr></table></figure></p>
+<p>修改之后Saxophone的Bean的id属性与Kenny Bean的instrument的属性的名字是一样的，这时就可以配置autowire属性，实现自动装配。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;kenny2&quot; class=&quot;com.springaction.springidol.Instrumentalist&quot; autowire=&quot;byName&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;song&quot; value=&quot;Jingle Bells&quot; /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>byName自动装配遵循一项约定:为属性自动装配ID与该属性的名字相同的Bean。通过设置autowire属性为byName，Spring将特殊对待kenny的所有属性，为这些属性寻找与该名字相同的Spring Bean。</p>
+<h2 id="byType自动装配"><a href="#byType自动装配" class="headerlink" title="byType自动装配"></a>byType自动装配</h2><p>工作方式类似于byName，只不过不在匹配属性的名字而是检查属性的类型。<br>局限性：应用只允许存在一个Bean与需要装配的属性类型相匹配。<br>可能会存在多个类型相同的Bean，为了避免因为使用byType带来歧义，我们有两个选择：</p>
+<ol>
+<li>可以为自动装配标示一个首选Bean</li>
+<li>可以取消某个Bean自动装配的候选资格。<br>首选Bean，可以使用<bean>的primary属性。如果一个bean属性的primary属性值设置为true，那么该bean将比其他bean优先被选择。但是很诡异的一点是：设置为true之后，所有的Bean都将变成首选Bean，也就不存在首选Bean了。所以，如果使用primary属性，就需要将所有非首选Bean的primary属性设置为false。</bean></li>
+</ol>
+<h2 id="constructor自动装配"><a href="#constructor自动装配" class="headerlink" title="constructor自动装配"></a>constructor自动装配</h2><p>使用constructor注入来装配Bean，我们可以移除<constructor-arg>元素，又Spring在应用上下文中自动选择Bean注入到构造器入参中。<br>constructor自动装配和byType自动装配都具有相同的局限性，如果一个类有多个构造器，他们都满足自动装配条件时，Spring是不会猜测哪一个构造器更适合使用。</constructor-arg></p>
+<h2 id="最佳自动装配"><a href="#最佳自动装配" class="headerlink" title="最佳自动装配"></a>最佳自动装配</h2><p>首先尝试constructor自动装配，如果没有发现与构造器相匹配的Bean时，Spring将尝试使用byType自动装配。</p>
+<h2 id="默认自动匹配"><a href="#默认自动匹配" class="headerlink" title="默认自动匹配"></a>默认自动匹配</h2><p>在根元素<beans>上增加一个default-autowire属性，则可以为Spring应用上下文中的每一个Bean配置相同的autowire属性。</beans></p>
+<h1 id="使用注解自动装配"><a href="#使用注解自动装配" class="headerlink" title="使用注解自动装配"></a>使用注解自动装配</h1><p>使用注解方式允许更细粒度的自动装配。<br>spring容器默认禁用注解装配。启用方式：使用Spring的context命名空间配置中的&lt;context:annotation-config /&gt;元素。<br>Spring支持几种不同的用于自动装配的注解。</p>
+<ul>
+<li>Spring自带的@Autowired注解</li>
+<li>JSR-330的@Inject注解</li>
+<li>JSR-250的@Resource注解</li>
+</ul>
+<h2 id="使用Autowired"><a href="#使用Autowired" class="headerlink" title="使用Autowired"></a>使用Autowired</h2><p>使用@Autowired注解时候，Spring将会尝试对该方法执行byType自动装配<br>@Autowired注解可以标注setter方法、自动装配Bean应用的任意方法、注解标注属性(就可以删除setter方法了)。当对构造器进行标注时候，即使在spring XML中没有使用<constructor-arg>元素配置Bean，该构造器也需要进行自动装配（使用构造器装配）。<br>两种阻碍场景：没有匹配到Bean、存在多个匹配的Bean。</constructor-arg></p>
+<p>解决阻碍，我们可以使用可选的自动装配</p>
+<h3 id="可选的自动装配"><a href="#可选的自动装配" class="headerlink" title="可选的自动装配"></a>可选的自动装配</h3><p>@Autowired注解具有很强的契约型特征，其标注的属性或参数必须是可装配的。<br>属性并不一定非要装配，null值也可以接受的场景下，我们通过设置@Autowired的required属性为false来配置自动装配是可选的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@Autowired(require=false)</span><br><span class="line">private Instrument instrument;</span><br></pre></td></tr></table></figure></p>
+<p>当使用@Autowired标注多个构造器时，Spring就会从所有满足装配条件的构造器中选择入参最多的那个构造器。</p>
+<h3 id="限定歧义性依赖"><a href="#限定歧义性依赖" class="headerlink" title="限定歧义性依赖"></a>限定歧义性依赖</h3><p>假设我们有两个Bean都实现了Instrument接口，这种场景下@Autowired注解没有办法选择哪一个Bean才是真正需要的。这样会抛出异常：NoSuchBeanDefinitionException异常，装配失败。但是我们可以使用@Qualifier注解来明确指定需要装配的bean。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">@Qualifier(&quot;guitar&quot;)</span><br><span class="line">private Instrument instrument;</span><br></pre></td></tr></table></figure></p>
+<p>使用@Qualifier意味着把@Autowired的byType自动转换为byName。</p>
+<h3 id="创建自动一的限定器-Qualifier"><a href="#创建自动一的限定器-Qualifier" class="headerlink" title="创建自动一的限定器(Qualifier)"></a>创建自动一的限定器(Qualifier)</h3><p>本文不做讲解，可自行查阅《Spring 实战》</p>
+<h2 id="借助-Inject实现基于标准的自动装配"><a href="#借助-Inject实现基于标准的自动装配" class="headerlink" title="借助@Inject实现基于标准的自动装配"></a>借助@Inject实现基于标准的自动装配</h2><p>@Inject属于Java依赖注入规范，与@Autowired的不同是：@Inject没有required属性。<br>本文不做讲解，可自行查阅《Spring 实战》</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2017/08/19/20170819-Spring-5Bean的自动装配/" data-id="cjkc6wbr60008vgo7pkys3gu1" class="article-share-link"><i class="fas fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/08/19/20170819-Spring-6自动检测Bean/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Spring-6自动检测Bean
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/08/19/20170819-Spring-4使用表达式装配/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Spring-4使用表达式装配</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/30/20170830-Java集合-JUC集合/" class="title">Java集合框架源码解析（2）-JUC集合</a></p>
+                            <p class="item-date"><time datetime="2017-08-30T09:16:10.000Z" itemprop="datePublished">2017-08-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/30/20170830-Java集合框架源码解析/" class="title">Java集合框架源码解析（1）</a></p>
+                            <p class="item-date"><time datetime="2017-08-30T08:16:13.000Z" itemprop="datePublished">2017-08-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/22/20170822-JVM调优中CPU调优利器之jstack/" class="title">JVM调优中CPU调优利器之jstack</a></p>
+                            <p class="item-date"><time datetime="2017-08-22T09:47:42.000Z" itemprop="datePublished">2017-08-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/19/20170819-Spring使用基于Java的配置/" class="title">Spring使用基于Java的配置</a></p>
+                            <p class="item-date"><time datetime="2017-08-19T12:54:33.000Z" itemprop="datePublished">2017-08-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/19/20170819-Spring-6自动检测Bean/" class="title">Spring-6自动检测Bean</a></p>
+                            <p class="item-date"><time datetime="2017-08-19T12:54:09.000Z" itemprop="datePublished">2017-08-19</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">11</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IntelliJ-Idea/">IntelliJ Idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JUC/">JUC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JVM调优/">JVM调优</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java配置/">Java配置</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spel/">Spel</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/">Spring</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Bean/">Spring Bean</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringAop/">SpringAop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBean/">SpringBean</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstack/">jstack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/个人博客/">个人博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/依赖注入/">依赖注入</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动检测Bean/">自动检测Bean</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动装配/">自动装配</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合/">集合</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IntelliJ-Idea/" style="font-size: 10px;">IntelliJ Idea</a> <a href="/tags/JUC/" style="font-size: 10px;">JUC</a> <a href="/tags/JVM调优/" style="font-size: 10px;">JVM调优</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Java配置/" style="font-size: 10px;">Java配置</a> <a href="/tags/Spel/" style="font-size: 10px;">Spel</a> <a href="/tags/Spring/" style="font-size: 20px;">Spring</a> <a href="/tags/Spring-Bean/" style="font-size: 10px;">Spring Bean</a> <a href="/tags/SpringAop/" style="font-size: 10px;">SpringAop</a> <a href="/tags/SpringBean/" style="font-size: 13.33px;">SpringBean</a> <a href="/tags/jstack/" style="font-size: 10px;">jstack</a> <a href="/tags/个人博客/" style="font-size: 10px;">个人博客</a> <a href="/tags/依赖注入/" style="font-size: 10px;">依赖注入</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/自动检测Bean/" style="font-size: 10px;">自动检测Bean</a> <a href="/tags/自动装配/" style="font-size: 10px;">自动装配</a> <a href="/tags/集合/" style="font-size: 10px;">集合</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://blog.csdn.net/u014684364">我的CSDN</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://paascloud.net/">PaasCloud</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://blog.csdn.net/mlc1218559742">小草的博客</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://blog.csdn.net/zx520sun">zx520sun博客</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 gsfeng<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

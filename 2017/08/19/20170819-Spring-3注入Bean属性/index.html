@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Spring-3注入Bean属性 | gsfeng|博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Spring使用一种被称为是“依赖注入”的方式管理Bean之间的依赖关系。依赖注入是一种优秀的解耦方式。Spring的依赖注入（Dependency Injection, DI）还有一个的名字：“控制反转”(Inversion of Control，IOC)。DI与IOC的含义完全相同。 注入Bean属性依赖注入分为两种：构造器注入（通过构造参数来注入值）、设置注入（通过调用属性的setter方法">
+<meta name="keywords" content="Spring,依赖注入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring-3注入Bean属性">
+<meta property="og:url" content="http://yoursite.com/2017/08/19/20170819-Spring-3注入Bean属性/index.html">
+<meta property="og:site_name" content="gsfeng|博客">
+<meta property="og:description" content="Spring使用一种被称为是“依赖注入”的方式管理Bean之间的依赖关系。依赖注入是一种优秀的解耦方式。Spring的依赖注入（Dependency Injection, DI）还有一个的名字：“控制反转”(Inversion of Control，IOC)。DI与IOC的含义完全相同。 注入Bean属性依赖注入分为两种：构造器注入（通过构造参数来注入值）、设置注入（通过调用属性的setter方法">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2017/08/19/20170819-Spring-3注入Bean属性/1.jpg">
+<meta property="og:updated_time" content="2017-08-19T13:17:55.805Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring-3注入Bean属性">
+<meta name="twitter:description" content="Spring使用一种被称为是“依赖注入”的方式管理Bean之间的依赖关系。依赖注入是一种优秀的解耦方式。Spring的依赖注入（Dependency Injection, DI）还有一个的名字：“控制反转”(Inversion of Control，IOC)。DI与IOC的含义完全相同。 注入Bean属性依赖注入分为两种：构造器注入（通过构造参数来注入值）、设置注入（通过调用属性的setter方法">
+<meta name="twitter:image" content="http://yoursite.com/2017/08/19/20170819-Spring-3注入Bean属性/1.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/favicon.png" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">gsfeng|博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/timg.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/timg.jpg" />
+            <h2 id="name">PPOffice</h2>
+            <h3 id="title">Java后端 &amp; 微服务</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>BeiJing, China</span>
+            <a id="follow" target="_blank" href="http://github.com/gsfeng2015">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                14
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                20
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/gsfeng2015" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-20170819-Spring-3注入Bean属性" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Spring-3注入Bean属性
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2017/08/19/20170819-Spring-3注入Bean属性/">
+            <time datetime="2017-08-19T12:51:02.000Z" itemprop="datePublished">2017-08-19</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Spring/">Spring</a>, <a class="tag-link" href="/tags/依赖注入/">依赖注入</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>Spring使用一种被称为是“依赖注入”的方式管理Bean之间的依赖关系。依赖注入是一种优秀的解耦方式。<br>Spring的依赖注入（Dependency Injection, DI）还有一个的名字：“控制反转”(Inversion of Control，IOC)。DI与IOC的含义完全相同。</p>
+<h1 id="注入Bean属性"><a href="#注入Bean属性" class="headerlink" title="注入Bean属性"></a>注入Bean属性</h1><p>依赖注入分为两种：构造器注入（通过构造参数来注入值）、设置注入（通过调用属性的setter方法来注入值）。<br><a id="more"></a><br>通常，JavaBean的属性是私有的，同时会提供一组存取器方法，以setXX()和getXXX()形式存在，spring的设置注入就是借助属性的set方法来配置属性的值。</p>
+<h2 id="注入简单值"><a href="#注入简单值" class="headerlink" title="注入简单值"></a>注入简单值</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;kenny&quot; class=&quot;com.springinaction.springidol.Instrumentalist&quot;&gt;</span><br><span class="line">       &lt;property name=&quot;song&quot; value=&quot;Jingle Bells&quot; /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>在Spring中我们使用<property>元素配置Bean属性。<property>跟<constructor-arg>类似，区别在于，前者是setter方法注入值，后者是通过构造参数注入值。  </constructor-arg></property></property></p>
+<h2 id="引用其他Bean"><a href="#引用其他Bean" class="headerlink" title="引用其他Bean"></a>引用其他Bean</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;kenny&quot; class=&quot;com.springinaction.springidol.Instrumentalist&quot;&gt;</span><br><span class="line">       &lt;property name=&quot;song&quot; value=&quot;Jingle Bells&quot; /&gt;</span><br><span class="line">       &lt;property name=&quot;instrument&quot; ref=&quot;saxophone&quot; /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>==Spring只要看到<property ...="">子元素，Spring框架就会在底层以反射方式执行一次setter方法。==<br>Spring底层会执行形如一下格式的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String nameStr = ...;</span><br><span class="line">String refStr = ...;</span><br><span class="line">String setterName = &quot;set&quot; + nameStr.substring(0, 1).toUpperCase() + nameStr.substring(1);// 生成将要调用的setter方法名</span><br><span class="line">Object paramBean = container.get(setterName);</span><br><span class="line">Method setter = class.getMethod(setterName, paramBean.getClass());</span><br><span class="line">// 此处的Obj参数是前一段反射代码为&lt;bean .../&gt;元素创建的对象</span><br><span class="line">setter.invoke(obj, paramBeam);</span><br></pre></td></tr></table></figure></property></p>
+<p>Spring底层代码会更完善一些。</p>
+<h3 id="注入内部Bean"><a href="#注入内部Bean" class="headerlink" title="注入内部Bean"></a>注入内部Bean</h3><p>内部bean是定义在其他bean内部的bean，如下配置将萨克斯声明为内部bean：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;kenny&quot; class=&quot;com.springinaction.springidol.Instrumentalist&quot;&gt;</span><br><span class="line">       &lt;property name=&quot;song&quot; value=&quot;Jingle Bells&quot; /&gt;</span><br><span class="line">       &lt;property name=&quot;instrument&quot;&gt;</span><br><span class="line">              &lt;bean class=&quot;com.springinaction.springidol.Saxophone&quot; /&gt;</span><br><span class="line">       &lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>内部bean并不仅限于setter注入，我们还可以把内部bean装配到构造方法的入参中，正如下面的duke的新声明所展示的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;duke&quot; class=&quot;com.springinaction.springidol.PoeticJuggler&quot;&gt;</span><br><span class="line">       &lt;constructor-arg value=&quot;25&quot; /&gt;</span><br><span class="line">       &lt;constructor-arg&gt;</span><br><span class="line">              &lt;bean class=&quot;com.springinaction.springidol.Sonnet29&quot; /&gt;</span><br><span class="line">       &lt;/constructor-arg&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>内部bean没有ID属性，虽然为内部bean配置一个ID属性完全是合法的，但是却没有必要。<br>内部类最大的缺点：不能被复用。内部bean仅适用于一次注入，而且也不能被其他bean应用。使用内部bean会影响Spring XML配置的可读性。</p>
+<h2 id="装配集合"><a href="#装配集合" class="headerlink" title="装配集合"></a>装配集合</h2><p>value和ref仅在Bean的属性值是单个值的情况下才有用。当Bean的属性类型是集合时，又该如何配置呢？<br>String提供了4种类型的集合的装配元素：</p>
+<table>
+<thead>
+<tr>
+<th>集合元素</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><list></list></td>
+<td>装配list类型的值，允许重复</td>
+</tr>
+<tr>
+<td><set></set></td>
+<td>装配set类型的值，不允许重复</td>
+</tr>
+<tr>
+<td><map></map></td>
+<td>装配map类型的值，名称和值可以是任意类型</td>
+</tr>
+<tr>
+<td><props></props></td>
+<td>装配properties类型的值，名称和值必须是String类型</td>
+</tr>
+</tbody>
+</table>
+<p>当属性为任意的Java.util.Collection类型时，<list>和<set>几乎可以完全互换。   </set></list></p>
+<p><map>和<props>这两个元素分别对应java.util.Map和java.util.Properties。当我们需要由键-值对组成的集合时，这两种配置元素非常有用。</props></map></p>
+<h3 id="装配List、Set、Array"><a href="#装配List、Set、Array" class="headerlink" title="装配List、Set、Array"></a>装配List、Set、Array</h3><p>Hank能够同时演奏多种乐器，由类OneManBand定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package com.springinaction.springidol;</span><br><span class="line"></span><br><span class="line">import java.util.Collection;</span><br><span class="line"></span><br><span class="line">public class OneManBand implements Performer &#123;</span><br><span class="line">    public OneManBand() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    public void perform() throws PerformanceException &#123;</span><br><span class="line">        for (Instrument instrument : instruments) &#123;</span><br><span class="line">            instrument.play();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Collection&lt;Instrument&gt; instruments; // 集合</span><br><span class="line"></span><br><span class="line">    public void setInstruments(Collection&lt;Instrument&gt; instruments) &#123;</span><br><span class="line">        this.instruments = instruments;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们使用list配置元素为Hank赋予表演时所用到的乐器集合：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;hank&quot; class=&quot;com.springinaction.springidol.OneManBand&quot;&gt;</span><br><span class="line">       &lt;property name=&quot;instruments&quot;&gt;</span><br><span class="line">              &lt;list&gt;</span><br><span class="line">                     &lt;ref bean=&quot;guitar&quot; /&gt;</span><br><span class="line">                     &lt;ref bean=&quot;cymbal&quot; /&gt;</span><br><span class="line">                     &lt;ref bean=&quot;harmonica&quot; /&gt;</span><br><span class="line">              &lt;/list&gt;</span><br><span class="line">       &lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure></p>
+<p>list元素包含一个或多个值，这里的ref元素用来定义在spring上下文中的其他bean引用。当然还可以使用其他的spring设置元素作为list的成员，包括<vaue>、<bean>和<null>。实际上，list可以包含另一个list作为其成员，形成多维列表。</null></bean></vaue></p>
+<h3 id="装配Map集合"><a href="#装配Map集合" class="headerlink" title="装配Map集合"></a>装配Map集合</h3><p>当OneManBand表演时，假设我们还想知道每一个音符是由哪种乐器产生的，OneManBand可以调整如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package com.springinaction.springidol;</span><br><span class="line"></span><br><span class="line">import java.util.Collection;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">public class OneManBand implements Performer &#123;</span><br><span class="line">    public OneManBand() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    public void perform() throws PerformanceException &#123;</span><br><span class="line">        for (String key : instruments.keySet()) &#123;</span><br><span class="line">            System.out.println(key + &quot;:&quot;);</span><br><span class="line">            Instrument instrument = instruments.get(key);</span><br><span class="line">            instrument.play();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private Map&lt;String, Instrument&gt; instruments;</span><br><span class="line"></span><br><span class="line">    public void setInstruments(Map&lt;String, Instrument&gt; instruments) &#123;</span><br><span class="line">        this.instruments = instruments;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用map元素配置instruments属性，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;hank&quot; class=&quot;com.springinaction.springidol.OneManBand&quot;&gt;</span><br><span class="line">       &lt;property name=&quot;instruments&quot;&gt;</span><br><span class="line">              &lt;map&gt;</span><br><span class="line">                     &lt;entry key=&quot;GUITAR&quot; value-ref=&quot;guitar&quot; /&gt;</span><br><span class="line">                     &lt;entry key=&quot;CYMBAL&quot; value-ref=&quot;cymbal&quot; /&gt;</span><br><span class="line">                     &lt;entry key=&quot;HARMONICA&quot; value-ref=&quot;harmonica&quot; /&gt;</span><br><span class="line">              &lt;/map&gt;</span><br><span class="line">       &lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>map中的entry元素由一个键和一个值组成，键和值可以是简单类型，也可以是其他类型的引用，这些属性将帮助我们指定entry的键和值：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td>指定map中entry的键为String</td>
+</tr>
+<tr>
+<td>key-ref</td>
+<td>指定map中entry的键为spring上下文中其他bean的引用</td>
+</tr>
+<tr>
+<td>value</td>
+<td>指定map中entry的值为String</td>
+</tr>
+<tr>
+<td>value-ref</td>
+<td>指定map中entry的值为spring上下文中其他bean的引用</td>
+</tr>
+</tbody>
+</table>
+<h3 id="装配Properties集合"><a href="#装配Properties集合" class="headerlink" title="装配Properties集合"></a>装配Properties集合</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;hank&quot; class=&quot;com.springinaction.springidol.XXX&quot;&gt;</span><br><span class="line">&lt;property name=&quot;instruments&quot;&gt;</span><br><span class="line">       &lt;props&gt;</span><br><span class="line">              &lt;prop key=&quot;GUITAR&quot;&gt;STRUM STRUM STRUM&lt;/prop&gt;</span><br><span class="line">              &lt;prop key=&quot;CYMBAL&quot;&gt;CRASH CRASH CRASH&lt;/prop&gt;</span><br><span class="line">              &lt;prop key=&quot;HARMONICA&quot;&gt;HUM HUM HUM&lt;/prop&gt;</span><br><span class="line">       &lt;/props&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ol>
+<li><property>元素用于把值或bean引用注入到bean的属性中</property></li>
+<li><props>元素用于定义一个java.util.Properties类型的集合值</props></li>
+<li><prop>元素用于定义<props>集合的一个成员。<h2 id="装配空值"><a href="#装配空值" class="headerlink" title="装配空值"></a>装配空值</h2>通常情况下bean属性的最初值都是null，直到你为它赋值，但是有些bean会为它的属性默认设置一个非空值。如果因为某些特殊原因，必须把属性设置为空值，则可以显式地为该属性装配一个null值。<br>为属性设置null值，只需使用<null>元素，例如：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;property name=&quot;someNonNullProperty&quot;&gt;&lt;null/&gt;&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+</null></props></prop></li>
+</ol>
+<p>显式地为属性装配null值的另一个理由是覆盖自动装配的值。</p>
+<h1 id="使用命名空间p装配属性"><a href="#使用命名空间p装配属性" class="headerlink" title="使用命名空间p装配属性"></a>使用命名空间p装配属性</h1><p><property>跟命名空间p是等价的，命名空间p的最主要优点是更简洁。<br>命名空间p的schema URI为<a href="http://www.springframework.org/schema/p。如果你想使用命名空间p，主需要在spring的XML配置中增加如下一段声明：" target="_blank" rel="noopener">http://www.springframework.org/schema/p。如果你想使用命名空间p，主需要在spring的XML配置中增加如下一段声明：</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:p=&quot;http://www.springframework.org/schema/p&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans</span><br><span class="line">       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd&quot;&gt;</span><br></pre></td></tr></table></figure></property></p>
+<p>使用范例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;kenny2&quot; class=&quot;com.springinaction.springidol.Instrumentalist&quot;</span><br><span class="line">    p:song=&quot;Jingle Bells&quot;</span><br><span class="line">    p:instrument-ref=&quot;saxophone&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<p>-ref后缀作为一个标识来告知spring应该装配一个引用而不是字面值。<br><img src="/2017/08/19/20170819-Spring-3注入Bean属性/1.jpg" alt=""></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2017/08/19/20170819-Spring-3注入Bean属性/" data-id="cjkc6wbto0029vgo7qbuitcju" class="article-share-link"><i class="fas fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/08/19/20170819-Spring-4使用表达式装配/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Spring-4使用表达式装配
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/08/19/20170819-Spring-2声明Bean/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Spring声明Bean</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/30/20170830-Java集合-JUC集合/" class="title">Java集合框架源码解析（2）-JUC集合</a></p>
+                            <p class="item-date"><time datetime="2017-08-30T09:16:10.000Z" itemprop="datePublished">2017-08-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/30/20170830-Java集合框架源码解析/" class="title">Java集合框架源码解析（1）</a></p>
+                            <p class="item-date"><time datetime="2017-08-30T08:16:13.000Z" itemprop="datePublished">2017-08-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/22/20170822-JVM调优中CPU调优利器之jstack/" class="title">JVM调优中CPU调优利器之jstack</a></p>
+                            <p class="item-date"><time datetime="2017-08-22T09:47:42.000Z" itemprop="datePublished">2017-08-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/19/20170819-Spring使用基于Java的配置/" class="title">Spring使用基于Java的配置</a></p>
+                            <p class="item-date"><time datetime="2017-08-19T12:54:33.000Z" itemprop="datePublished">2017-08-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/19/20170819-Spring-6自动检测Bean/" class="title">Spring-6自动检测Bean</a></p>
+                            <p class="item-date"><time datetime="2017-08-19T12:54:09.000Z" itemprop="datePublished">2017-08-19</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">11</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IntelliJ-Idea/">IntelliJ Idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JUC/">JUC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JVM调优/">JVM调优</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java配置/">Java配置</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spel/">Spel</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/">Spring</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Bean/">Spring Bean</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringAop/">SpringAop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBean/">SpringBean</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstack/">jstack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/个人博客/">个人博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/依赖注入/">依赖注入</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动检测Bean/">自动检测Bean</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动装配/">自动装配</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合/">集合</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IntelliJ-Idea/" style="font-size: 10px;">IntelliJ Idea</a> <a href="/tags/JUC/" style="font-size: 10px;">JUC</a> <a href="/tags/JVM调优/" style="font-size: 10px;">JVM调优</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Java配置/" style="font-size: 10px;">Java配置</a> <a href="/tags/Spel/" style="font-size: 10px;">Spel</a> <a href="/tags/Spring/" style="font-size: 20px;">Spring</a> <a href="/tags/Spring-Bean/" style="font-size: 10px;">Spring Bean</a> <a href="/tags/SpringAop/" style="font-size: 10px;">SpringAop</a> <a href="/tags/SpringBean/" style="font-size: 13.33px;">SpringBean</a> <a href="/tags/jstack/" style="font-size: 10px;">jstack</a> <a href="/tags/个人博客/" style="font-size: 10px;">个人博客</a> <a href="/tags/依赖注入/" style="font-size: 10px;">依赖注入</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/自动检测Bean/" style="font-size: 10px;">自动检测Bean</a> <a href="/tags/自动装配/" style="font-size: 10px;">自动装配</a> <a href="/tags/集合/" style="font-size: 10px;">集合</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://blog.csdn.net/u014684364">我的CSDN</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://paascloud.net/">PaasCloud</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://blog.csdn.net/mlc1218559742">小草的博客</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://blog.csdn.net/zx520sun">zx520sun博客</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 gsfeng<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

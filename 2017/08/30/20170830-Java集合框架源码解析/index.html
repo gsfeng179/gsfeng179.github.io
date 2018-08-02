@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Java集合框架源码解析（1） | gsfeng|博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="最近几天看Java集合框架相关的博文，找到了一些很不错的文章。现整理分享出来。 常见的集合框架图网上流传最多的图，不多解释。">
+<meta name="keywords" content="Java,集合框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java集合框架源码解析（1）">
+<meta property="og:url" content="http://yoursite.com/2017/08/30/20170830-Java集合框架源码解析/index.html">
+<meta property="og:site_name" content="gsfeng|博客">
+<meta property="og:description" content="最近几天看Java集合框架相关的博文，找到了一些很不错的文章。现整理分享出来。 常见的集合框架图网上流传最多的图，不多解释。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2017/08/30/20170830-Java集合框架源码解析/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2017/08/30/20170830-Java集合框架源码解析/JavaCollectionCheatSheet.PNG">
+<meta property="og:image" content="http://yoursite.com/2017/08/30/20170830-Java集合框架源码解析/0.jpeg">
+<meta property="og:updated_time" content="2018-08-02T03:50:05.771Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java集合框架源码解析（1）">
+<meta name="twitter:description" content="最近几天看Java集合框架相关的博文，找到了一些很不错的文章。现整理分享出来。 常见的集合框架图网上流传最多的图，不多解释。">
+<meta name="twitter:image" content="http://yoursite.com/2017/08/30/20170830-Java集合框架源码解析/1.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/favicon.png" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-brands.min.css">
+    <link rel="stylesheet" href="/libs/font-awesome5/css/fa-solid.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">gsfeng|博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/timg.jpg" />
+                            <i class="fas fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fas fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile" class="profile-fixed">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/timg.jpg" />
+            <h2 id="name">PPOffice</h2>
+            <h3 id="title">Java后端 &amp; 微服务</h3>
+            <span id="location"><i class="fas fa-map-marker-alt" style="padding-right: 5px"></i>BeiJing, China</span>
+            <a id="follow" target="_blank" href="http://github.com/gsfeng2015">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                14
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                20
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/gsfeng2015" target="_blank" title="github" class=tooltip>
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-20170830-Java集合框架源码解析" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Java集合框架源码解析（1）
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fas fa-calendar-alt"></i>
+        <a href="/2017/08/30/20170830-Java集合框架源码解析/">
+            <time datetime="2017-08-30T08:16:13.000Z" itemprop="datePublished">2017-08-30</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fas fa-folder"></i>
+        <a class="article-category-link" href="/categories/技术/">技术</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/Java/">Java</a>, <a class="tag-link" href="/tags/集合框架/">集合框架</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>最近几天看Java集合框架相关的博文，找到了一些很不错的文章。现整理分享出来。</p>
+<h1 id="常见的集合框架图"><a href="#常见的集合框架图" class="headerlink" title="常见的集合框架图"></a>常见的集合框架图</h1><p><img src="/2017/08/30/20170830-Java集合框架源码解析/1.jpg" alt="image"><br>网上流传最多的图，不多解释。</p>
+<a id="more"></a>
+<h1 id="Java集合框架全图"><a href="#Java集合框架全图" class="headerlink" title="Java集合框架全图"></a>Java集合框架全图</h1><p>网上有大牛把Java集合整理在了一张图上。如下：<br><img src="/2017/08/30/20170830-Java集合框架源码解析/JavaCollectionCheatSheet.PNG" alt="image"><br>在这里，集合类分为了Map和Collection两个大的类别:<br>处于图片左上角的那一块灰色里面的四个类（Dictionary、HashTable、Vector、Stack）都是线程安全的，可是它们都是JDK的老的遗留类。如今基本都不怎么使用了，都有了相应的取代类。</p>
+<ul>
+<li>当中Map是用来取代图片中左上角的那个Dictionary抽象类。官方推荐使用Map接口来取代它。</li>
+<li>相同对于HashTable，官方推荐ConcurrentHashMap来取代。接着以下的Vector是List以下的一个实现类。</li>
+</ul>
+<p>接着最上面的粉红色部分是集合类全部接口关系图。当中Map的结构比较简单，而Collection的结构就相对复杂一些。Collection有三个继承接口：List、Queue和Set。</p>
+<p>接下来的绿色部分则是集合类的主要实现类了。这也是我们最常常使用的集合类了。</p>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><h3 id="依照实现接口分类："><a href="#依照实现接口分类：" class="headerlink" title="依照实现接口分类："></a>依照实现接口分类：</h3><p>实现Map接口的有：EnumMap、IdentityHashMap、HashMap、LinkedHashMap、WeakHashMap、TreeMap</p>
+<p>实现List接口的有：ArrayList、LinkedList</p>
+<p>实现Set接口的有：HashSet、LinkedHashSet、TreeSet</p>
+<p>实现Queue接口的有：PriorityQueue、LinkedList、ArrayQueue</p>
+<h3 id="依据底层实现的数据结构分类："><a href="#依据底层实现的数据结构分类：" class="headerlink" title="依据底层实现的数据结构分类："></a>依据底层实现的数据结构分类：</h3><p>底层以数组的形式实现：EnumMap、ArrayList、ArrayQueue<br>底层以链表的形式实现：LinkedHashSet、LinkedList、LinkedHashMap<br>底层以hash table的形式实现：HashMap、HashSet、LinkedHashMap、LinkedHashSet、WeakHashMap、IdentityHashMap<br>底层以红黑树的形式实现：TreeMap、TreeSet<br>底层以二叉堆的形式实现：PriorityQueue</p>
+<p>最下方的一个整块都是java.util.concurrent包里面的类，依照包名我们就能够知道这个包里面的类都是用来处理Java编程中各种并发场景的。</p>
+<h1 id="常用集合类特性"><a href="#常用集合类特性" class="headerlink" title="常用集合类特性"></a>常用集合类特性</h1><p>图片放大效果不佳，建议不要放大看。<br><img src="/2017/08/30/20170830-Java集合框架源码解析/0.jpeg" alt="image">  </p>
+<h1 id="工具推荐"><a href="#工具推荐" class="headerlink" title="工具推荐"></a>工具推荐</h1><p>阅读源代码神器：<a href="http://grepcode.com/" target="_blank" rel="noopener">http://grepcode.com/</a><br>这个源代码阅读网站不但包括了绝大部分的Java类库源代码，并且对源代码中间的凝视、跳转等做了非常好的优化。有了它，保证你的源代码阅读效率大大提升。</p>
+<h1 id="Java-集合系列——博文"><a href="#Java-集合系列——博文" class="headerlink" title="Java 集合系列——博文"></a>Java 集合系列——博文</h1><p><a href="http://www.cnblogs.com/skywang12345/p/3308498.html" target="_blank" rel="noopener">Java 集合系列01之 总体框架</a><br><a href="http://www.cnblogs.com/skywang12345/p/3308513.html" target="_blank" rel="noopener">Java 集合系列02之 Collection架构</a><br><a href="http://www.cnblogs.com/skywang12345/p/3308556.html" target="_blank" rel="noopener">Java 集合系列03之 ArrayList详细介绍(源码解析)和使用示例</a><br><a href="http://www.cnblogs.com/skywang12345/p/3308762.html" target="_blank" rel="noopener">Java 集合系列04之 fail-fast总结(通过ArrayList来说明fail-fast的原理、解决办法)</a><br><a href="http://www.cnblogs.com/skywang12345/p/3308807.html" target="_blank" rel="noopener">Java 集合系列05之 LinkedList详细介绍(源码解析)和使用示例</a><br><a href="http://www.cnblogs.com/skywang12345/p/3308833.html" target="_blank" rel="noopener">Java 集合系列06之 Vector详细介绍(源码解析)和使用示例</a><br><a href="http://www.cnblogs.com/skywang12345/p/3308852.html" target="_blank" rel="noopener">Java 集合系列07之 Stack详细介绍(源码解析)和使用示例</a><br><a href="http://www.cnblogs.com/skywang12345/p/3308900.html" target="_blank" rel="noopener">Java 集合系列08之 List总结(LinkedList, ArrayList等使用场景和性能分析)</a><br><a href="http://www.cnblogs.com/skywang12345/p/3308931.html" target="_blank" rel="noopener">Java 集合系列09之 Map架构</a><br><a href="http://www.cnblogs.com/skywang12345/p/3310835.html" target="_blank" rel="noopener">Java 集合系列10之 HashMap详细介绍(源码解析)和使用示例</a><br><a href="http://www.cnblogs.com/skywang12345/p/3310887.html" target="_blank" rel="noopener">Java 集合系列11之 Hashtable详细介绍(源码解析)和使用示例</a><br><a href="http://www.cnblogs.com/skywang12345/p/3310928.html" target="_blank" rel="noopener">Java 集合系列12之 TreeMap详细介绍(源码解析)和使用示例</a><br><a href="http://www.cnblogs.com/skywang12345/p/3311092.html" target="_blank" rel="noopener">Java 集合系列13之 WeakHashMap详细介绍(源码解析)和使用示例</a><br><a href="http://www.cnblogs.com/skywang12345/p/3311126.html" target="_blank" rel="noopener">Java 集合系列14之 Map总结(HashMap, Hashtable, TreeMap, WeakHashMap等使用场景)</a><br><a href="http://www.cnblogs.com/skywang12345/p/3311136.html" target="_blank" rel="noopener">Java 集合系列15之 Set架构</a><br><a href="http://www.cnblogs.com/skywang12345/p/3311252.html" target="_blank" rel="noopener">Java 集合系列16之 HashSet详细介绍(源码解析)和使用示例</a><br><a href="http://www.cnblogs.com/skywang12345/p/3311268.html" target="_blank" rel="noopener">Java 集合系列17之 TreeSet详细介绍(源码解析)和使用示例</a><br><a href="http://www.cnblogs.com/skywang12345/p/3311275.html" target="_blank" rel="noopener">Java 集合系列18之 Iterator和Enumeration比较</a></p>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p><a href="http://www.cnblogs.com/mengfanrong/p/5079533.html" target="_blank" rel="noopener">一张图让你看清Java集合类（Java集合类的总结）</a></p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://yoursite.com/2017/08/30/20170830-Java集合框架源码解析/" data-id="cjkc6wbrq000lvgo7vkmf6r49" class="article-share-link"><i class="fas fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fab fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fab fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fab fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fab fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/2017/08/30/20170830-Java集合-JUC集合/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Java集合框架源码解析（2）-JUC集合
+                
+            </div>
+        </a>
+    
+    
+        <a href="/2017/08/22/20170822-JVM调优中CPU调优利器之jstack/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">JVM调优中CPU调优利器之jstack</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="no-thumbnail">
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/30/20170830-Java集合-JUC集合/" class="title">Java集合框架源码解析（2）-JUC集合</a></p>
+                            <p class="item-date"><time datetime="2017-08-30T09:16:10.000Z" itemprop="datePublished">2017-08-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/30/20170830-Java集合框架源码解析/" class="title">Java集合框架源码解析（1）</a></p>
+                            <p class="item-date"><time datetime="2017-08-30T08:16:13.000Z" itemprop="datePublished">2017-08-30</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/22/20170822-JVM调优中CPU调优利器之jstack/" class="title">JVM调优中CPU调优利器之jstack</a></p>
+                            <p class="item-date"><time datetime="2017-08-22T09:47:42.000Z" itemprop="datePublished">2017-08-22</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/19/20170819-Spring使用基于Java的配置/" class="title">Spring使用基于Java的配置</a></p>
+                            <p class="item-date"><time datetime="2017-08-19T12:54:33.000Z" itemprop="datePublished">2017-08-19</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/技术/">技术</a></p>
+                            <p class="item-title"><a href="/2017/08/19/20170819-Spring-6自动检测Bean/" class="title">Spring-6自动检测Bean</a></p>
+                            <p class="item-date"><time datetime="2017-08-19T12:54:09.000Z" itemprop="datePublished">2017-08-19</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">分类</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/技术/">技术</a><span class="category-list-count">11</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">2</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IntelliJ-Idea/">IntelliJ Idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JUC/">JUC</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JVM调优/">JVM调优</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java配置/">Java配置</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spel/">Spel</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/">Spring</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring-Bean/">Spring Bean</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringAop/">SpringAop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SpringBean/">SpringBean</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jstack/">jstack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/个人博客/">个人博客</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/依赖注入/">依赖注入</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/多线程/">多线程</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/工具/">工具</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动检测Bean/">自动检测Bean</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/自动装配/">自动装配</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合/">集合</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/集合框架/">集合框架</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/IntelliJ-Idea/" style="font-size: 10px;">IntelliJ Idea</a> <a href="/tags/JUC/" style="font-size: 10px;">JUC</a> <a href="/tags/JVM调优/" style="font-size: 10px;">JVM调优</a> <a href="/tags/Java/" style="font-size: 16.67px;">Java</a> <a href="/tags/Java配置/" style="font-size: 10px;">Java配置</a> <a href="/tags/Spel/" style="font-size: 10px;">Spel</a> <a href="/tags/Spring/" style="font-size: 20px;">Spring</a> <a href="/tags/Spring-Bean/" style="font-size: 10px;">Spring Bean</a> <a href="/tags/SpringAop/" style="font-size: 10px;">SpringAop</a> <a href="/tags/SpringBean/" style="font-size: 13.33px;">SpringBean</a> <a href="/tags/jstack/" style="font-size: 10px;">jstack</a> <a href="/tags/个人博客/" style="font-size: 10px;">个人博客</a> <a href="/tags/依赖注入/" style="font-size: 10px;">依赖注入</a> <a href="/tags/多线程/" style="font-size: 10px;">多线程</a> <a href="/tags/工具/" style="font-size: 10px;">工具</a> <a href="/tags/自动检测Bean/" style="font-size: 10px;">自动检测Bean</a> <a href="/tags/自动装配/" style="font-size: 10px;">自动装配</a> <a href="/tags/集合/" style="font-size: 10px;">集合</a> <a href="/tags/集合框架/" style="font-size: 10px;">集合框架</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://blog.csdn.net/u014684364">我的CSDN</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://paascloud.net/">PaasCloud</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://blog.csdn.net/mlc1218559742">小草的博客</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://blog.csdn.net/zx520sun">zx520sun博客</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fas fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 gsfeng<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
